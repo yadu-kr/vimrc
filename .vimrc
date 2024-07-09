@@ -27,7 +27,7 @@
 " Disable full compatibility with Vi
 set nocompatible
 
- Sets how many lines of history VIM has to remember
+" Sets how many lines of history VIM has to remember
 set history=500
 
 " Enable filetype detection 
@@ -42,6 +42,8 @@ let g:ale_linters = {
       \ 'vhdl': ['hdl_checker'],
       \}
 let g:ale_completion_enabled=1
+
+
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -86,6 +88,14 @@ set showmatch
 
 " Correct backspacing
 set backspace=indent,eol,start
+
+
+inoremap ( ()<Left>
+inoremap [ []<Left>
+inoremap { {}<Left>
+inoremap <expr> <CR> search('{\%#}', 'n') ? "\<CR>\<CR>\<Up>\<C-f>" : "\<CR>"
+
+
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -174,6 +184,7 @@ set smartindent
 
 
 
+
 """"""""""""""""""""""""""""""
 " => Status line
 """"""""""""""""""""""""""""""
@@ -191,13 +202,15 @@ let g:lightline = { 'colorscheme' : 'default' }
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin()
 
-
 " List of plugins
 Plug 'itchyny/lightline.vim'
 Plug 'dense-analysis/ale'
+Plug 'maximbaz/lightline-ale'
 Plug 'preservim/nerdtree'
 Plug 'Yggdroot/indentLine'
 Plug 'justinmk/vim-sneak'
+Plug 'tpope/vim-commentary'
+
 call plug#end()
 
 
@@ -210,17 +223,36 @@ call plug#end()
 autocmd VimEnter * NERDTree
 
 " Lightline configuration
-let g:lightline = {
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ] ],
-      \ }
-      \ }
+" Display complete file path of current buffer
+let g:lightline = {}
 
-" Indentline configuration
+" lightline-ale integration
+let g:lightline.component_expand = {
+      \  'linter_checking': 'lightline#ale#checking',
+      \  'linter_infos': 'lightline#ale#infos',
+      \  'linter_warnings': 'lightline#ale#warnings',
+      \  'linter_errors': 'lightline#ale#errors',
+      \  'linter_ok': 'lightline#ale#ok',
+      \ }
+let g:lightline.component_type = {
+      \     'linter_checking': 'right',
+      \     'linter_infos': 'right',
+      \     'linter_warnings': 'warning',
+      \     'linter_errors': 'error',
+      \     'linter_ok': 'right',
+      \ }
+let g:lightline.active = {
+      \ 'left' : [ [ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ] ],
+      \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ],
+      \            [ 'lineinfo' ],
+	  \            [ 'percent' ],
+	  \            [ 'fileformat', 'fileencoding', 'filetype'] ] }
+
+" indentline configuration
 let g:indentLine_char_list = ['¦']
 let g:indentLine_setColors = 1
 
-" Set label mode for Sneak 
+" Set label mode for vim-sneak 
 let g:sneak#label = 1
 
 
