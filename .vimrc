@@ -3,14 +3,13 @@
 "
 " Sections: 
 "-> General 
-"-> VIM user interface 
+"-> VIM User Interface 
 "-> Colors and Fonts 
-"-> Files and backups 
-"-> Text, tab and indent related 
-"-> Status line 
-"-> Vim-Plug Manager
-"-> Plugins
-"-> Helper functions
+"-> Files and Backups 
+"-> Text, Tab, and Indentation
+"-> Plug-ins
+"-> Plug-in Configuration
+"-> Helper Functions
 "
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
@@ -18,7 +17,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => General
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
 " Disable full compatibility with Vi
 set nocompatible
 
@@ -42,8 +40,11 @@ let g:ale_completion_enabled=1
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
+" => VIM User Interface
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Always show the status line
+set laststatus=2
+
 " Enable auto completion menu after pressing TAB
 set wildmenu
 
@@ -140,7 +141,7 @@ set encoding=utf8
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Files, backups and undo
+" => Files, Backups and Undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Temp file directories
 set undodir=$HOME/.vim/tmp/undo/     " undo files 
@@ -162,7 +163,7 @@ endif
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
+" => Text, Tab, and Indentation
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Use spaces instead of tabs
 set expandtab
@@ -182,23 +183,11 @@ set smartindent
 
 
 """"""""""""""""""""""""""""""
-" => Status line
+" => Plug-ins
 """"""""""""""""""""""""""""""
-" Always show the status line
-set laststatus=2
-
-" Set the colorscheme for lightline
-let g:lightline = { 'colorscheme' : 'default' }
-
-
-
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Vim-Plug Manager
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" List of plug-ins
 call plug#begin()
 
-" List of plugins
 Plug 'itchyny/lightline.vim'
 Plug 'dense-analysis/ale'
 Plug 'maximbaz/lightline-ale'
@@ -216,7 +205,7 @@ call plug#end()
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Plugins 
+" => Plug-in Configuration
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Start NERDTree and vim-startify as splashscreen
 autocmd VimEnter *
@@ -227,10 +216,11 @@ autocmd VimEnter *
             \ | endif
 
 " lightline configuration
-" Display complete file path of current buffer
-let g:lightline = {}
 
-" lightline-ale integration
+" Set the colorscheme for lightline
+let g:lightline = { 'colorscheme' : 'default' }
+
+" lightline-ale integration and devicon addition
 let g:lightline.component_expand = {
       \  'linter_checking': 'lightline#ale#checking',
       \  'linter_infos': 'lightline#ale#infos',
@@ -256,6 +246,10 @@ let g:lightline#ale#indicator_infos = "\uf129"
 let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
+let g:lightline.component_function = {
+      \   'filetype': 'MyFiletype',
+      \   'fileformat': 'MyFileformat',
+      \ }
 
 " indentline configuration
 let g:indentLine_char_list = ['¦']
@@ -264,12 +258,22 @@ let g:indentLine_setColors = 1
 " Set label mode for vim-sneak 
 let g:sneak#label = 1
 
+" Set conceal level for NERDTree-devicon
+set conceallevel=3
+
 
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Helper functions
+" => Helper Functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function! MyFiletype()
+  return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
+endfunction
+
+function! MyFileformat()
+  return winwidth(0) > 70 ? (&fileformat . ' ' . WebDevIconsGetFileFormatSymbol()) : ''
+endfunction
 
 
 
@@ -315,4 +319,4 @@ function MyDiff()
   endif
 endfunction
 
-" EOF--------------------------------------------
+" EOF-----------------------------
