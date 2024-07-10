@@ -1,10 +1,5 @@
 "
-"
-"
 "       VIMRC CONFIG
-"      
-"
-"
 "
 " Sections: 
 "-> General 
@@ -89,11 +84,14 @@ set showmatch
 " Correct backspacing
 set backspace=indent,eol,start
 
-
+" Autoclose brackets and move cursor between them
 inoremap ( ()<Left>
 inoremap [ []<Left>
 inoremap { {}<Left>
 inoremap <expr> <CR> search('{\%#}', 'n') ? "\<CR>\<CR>\<Up>\<C-f>" : "\<CR>"
+
+" Get rid of annoying bell
+set belloff=all
 
 
 
@@ -107,9 +105,7 @@ syntax on
 " Set regular expression engine automatically
 set regexpengine=0
 
-if !has('gui_running')
-  set t_Co=256
-endif
+set t_Co=256
 
 " Set colourscheme
 colorscheme molokai
@@ -135,7 +131,7 @@ set showcmd
 set noshowmode
 
 " Set the GUI font used
-set guifont=SFMono\ Nerd\ Font:h13
+set guifont=SauceCodePro\ NFM\ SemiBold:h16
 
 " Set utf8 as standard encoding 
 set encoding=utf8
@@ -210,7 +206,10 @@ Plug 'preservim/nerdtree'
 Plug 'Yggdroot/indentLine'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-commentary'
+Plug 'mhinz/vim-startify'
 
+" Load icon plugin last
+Plug 'ryanoasis/vim-devicons'
 call plug#end()
 
 
@@ -219,10 +218,15 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Start NERDTree and leave curson in it
-autocmd VimEnter * NERDTree
+" Start NERDTree and vim-startify as splashscreen
+autocmd VimEnter *
+            \   if !argc()
+            \ |   Startify
+            \ |   NERDTree
+            \ |   wincmd w
+            \ | endif
 
-" Lightline configuration
+" lightline configuration
 " Display complete file path of current buffer
 let g:lightline = {}
 
@@ -247,6 +251,11 @@ let g:lightline.active = {
       \            [ 'lineinfo' ],
 	  \            [ 'percent' ],
 	  \            [ 'fileformat', 'fileencoding', 'filetype'] ] }
+let g:lightline#ale#indicator_checking = "\uf110"
+let g:lightline#ale#indicator_infos = "\uf129"
+let g:lightline#ale#indicator_warnings = "\uf071"
+let g:lightline#ale#indicator_errors = "\uf05e"
+let g:lightline#ale#indicator_ok = "\uf00c"
 
 " indentline configuration
 let g:indentLine_char_list = ['¦']
