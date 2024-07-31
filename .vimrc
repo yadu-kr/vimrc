@@ -137,6 +137,13 @@ set guifont=SauceCodePro\ NFM\ SemiBold:h16
 " Set utf8 as standard encoding 
 set encoding=utf8
 
+" Set conceal level for NERDTree-devicon
+set conceallevel=3
+
+" Add sign column and reduce updatetime for GitGutter signs
+set signcolumn=auto
+set updatetime=100
+
 
 
 
@@ -196,9 +203,12 @@ Plug 'Yggdroot/indentLine'
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-commentary'
 Plug 'mhinz/vim-startify'
+Plug 'tpope/vim-fugitive'
+Plug 'airblade/vim-gitgutter'
 
 " Load icon plugin last
 Plug 'ryanoasis/vim-devicons'
+
 call plug#end()
 
 
@@ -236,7 +246,8 @@ let g:lightline.component_type = {
       \     'linter_ok': 'right',
       \ }
 let g:lightline.active = {
-      \ 'left' : [ [ 'mode', 'paste' ], [ 'readonly', 'absolutepath', 'modified' ] ],
+      \ 'left' : [ [ 'mode', 'paste' ], 
+      \            [ 'gitbranch', 'readonly', 'absolutepath', 'modified' ] ],
       \ 'right': [ [ 'linter_checking', 'linter_errors', 'linter_warnings', 'linter_infos', 'linter_ok' ],
       \            [ 'lineinfo' ],
 	  \            [ 'percent' ],
@@ -247,6 +258,7 @@ let g:lightline#ale#indicator_warnings = "\uf071"
 let g:lightline#ale#indicator_errors = "\uf05e"
 let g:lightline#ale#indicator_ok = "\uf00c"
 let g:lightline.component_function = {
+      \   'gitbranch': 'MyFugitiveHead',
       \   'filetype': 'MyFiletype',
       \   'fileformat': 'MyFileformat',
       \ }
@@ -258,8 +270,8 @@ let g:indentLine_setColors = 1
 " Set label mode for vim-sneak 
 let g:sneak#label = 1
 
-" Set conceal level for NERDTree-devicon
-set conceallevel=3
+" Make NERDTree change CWD automatically
+let g:NERDTreeChDirMode = 2
 
 
 
@@ -267,6 +279,14 @@ set conceallevel=3
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper Functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+function MyFugitiveHead()
+  let head = FugitiveHead()
+  if head != ""
+    let head = "\uf126 " .. head
+  endif
+  return head
+endfunction
+
 function! MyFiletype()
   return winwidth(0) > 70 ? (strlen(&filetype) ? &filetype . ' ' . WebDevIconsGetFileTypeSymbol() : 'no ft') : ''
 endfunction
@@ -319,4 +339,8 @@ function MyDiff()
   endif
 endfunction
 
-" EOF-----------------------------
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+"
+"       EOF - VIMRC CONFIG
+"
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
